@@ -18,13 +18,13 @@
 
 与原项目相比，需要额外依赖第三方库 oss
 
-```
+```python
 pip install oss2
 ```
 
 `settings.py` 必须加上阿里云OSS配置
 
-```
+```python
 # 阿里云存储
 OSS_ACCESS_KEY_ID = "xxx"
 OSS_ACCESS_KEY_SECRET = "xxx"
@@ -63,7 +63,7 @@ MDEDITOR_CONFIGS = {"default": {"OSS": True, ...}}  # 开启阿里云oss开关
 
 - 安装
 ```bash
-    pip install 
+    pip install  git+git://github.com/lzjun567/django-mdeditor
 ```
 
 - 在 `settings` 配置文件 `INSTALLED_APPS` 中添加 `mdeditor`:
