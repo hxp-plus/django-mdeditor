@@ -250,7 +250,7 @@ MDEDITOR_CONFIGS = {
 
 欢迎反馈和交流！
 
-你可以创建 [issue](https://github.com/pylixm/django-mdeditor/issues) 或加微信。
+你可以创建 [issue](https://github.com/pylixm/django-mdeditor/issues) 或加微信 lzjun567。
 
 ![](screenshot/个人微信号.png)
 
