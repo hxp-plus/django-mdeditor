@@ -1,48 +1,72 @@
 
-# django-mdeditor
+# django-mdeditor-pplus
 
 
 [![ENV](https://img.shields.io/badge/release-v0.1.19-blue.svg)](https://github.com/pylixm/django-mdeditor)
-[![ENV](https://img.shields.io/badge/中文-v0.1.19-blue.svg)](./README_CN.md)
-[![ENV](https://img.shields.io/badge/Gitter-v0.1.19-blue.svg)](https://gitter.im/django-mdeditor/Lobby)
+[![ENV](https://img.shields.io/badge/中文文档-v0.1.19-blue.svg)](./README_CN.md)
+[![ENV](https://img.shields.io/badge/gitter-v0.1.19-blue.svg)](https://gitter.im/django-mdeditor/Lobby)
 [![ENV](https://img.shields.io/badge/python-2.x/3.x-green.svg)](https://github.com/pylixm/django-mdeditor)
 [![ENV](https://img.shields.io/badge/django-1.7+-green.svg)](https://github.com/pylixm/django-mdeditor)
 [![LICENSE](https://img.shields.io/badge/license-GPL3.0-green.svg)](https://github.com/pylixm/django-mdeditor/master/LICENSE.txt)
 
-![](./django_and_editor.png)
 
-**Django-mdeditor** is Markdown Editor plugin application for [django](djangoproject.com) base on [Editor.md](https://github.com/pandao/editor.md).
+**Django-mdeditor-pplus** 是基于 [Editor.md](https://github.com/pandao/editor.md) 的一个 [django](djangoproject.com) Markdown 文本编辑插件应用。
 
-**Django-mdeditor** was inspired by great [django-ckeditor](https://github.com/django-ckeditor/django-ckeditor).
+**Django-mdeditor-pplus** Fork 自 [django-mdeditor](https://github.com/pylixm/django-mdeditor)
 
-**Note:** 
+与django-mdeditor相比，主要增强了图片上传可自定义选择是存本地还是存第三方云平台。目前图片上传支持阿里云OSS
 
-- For Markdown page rendering issues, backend rendering is recommended. Because `Editor.md` has not been updated for a long time, some bugs and compatibility issues need to be debugged. Of course, front-end students can choose.
-- Regarding the `Jquery` conflict, it cannot be deleted because it is required by the admin backend. It is recommended to separate the editing page on a single page or a full screen directly, using its own static file to distinguish it from other pages.
+与原项目相比，需要额外依赖第三方库 oss
 
-## Features
-
-- Almost Editor.md features 
-    - Support Standard Markdown / CommonMark and GFM (GitHub Flavored Markdown);
-    - Full-featured: Real-time Preview, Image (cross-domain) upload, Preformatted text/Code blocks/Tables insert, Search replace, Themes, Multi-languages;
-    - Markdown Extras : Support ToC (Table of Contents), Emoji;
-    - Support TeX (LaTeX expressions, Based on KaTeX), Flowchart and Sequence Diagram of Markdown extended syntax;
-- Can constom Editor.md toolbar 
-- The MDTextField field is provided for the model and can be displayed directly in the django admin.
-- The MDTextFormField is provided for the Form and ModelForm.
-- The MDEditorWidget is provided for the Admin custom widget.
-
-
-## Quick start
-
-- Installation.
-```bash
-    pipenv install django-mdeditor
-    # or
-    pip install django-mdeditor
+```
+pip install oss2
 ```
 
-- Add `mdeditor` to your INSTALLED_APPS setting like this:
+`settings.py` 必须加上阿里云OSS配置
+
+```
+# 阿里云存储
+OSS_ACCESS_KEY_ID = "xxx"
+OSS_ACCESS_KEY_SECRET = "xxx"
+OSS_ENDPOINT = "xxx"
+OSS_BUCKET_NAME = "xxx"
+# mdeditor 图片上传用oss
+MDEDITOR_CONFIGS = {"default": {"OSS": True, ...}}  # 开启阿里云oss开关
+```
+
+当然，你也可以在此基础上继续扩展实现其它云存储服务，例如七牛、又拍云、腾讯云等等。
+
+以下是原项目的readme
+
+------
+
+
+**注：** 
+
+- 关于Markdown页面渲染问题，建议后端渲染。因`Editor.md` 已长时间不更新有些bug和兼容性问题需要自己调试，当然前端同学可自行选择。
+- 关于`Jquery`冲突问题，因admin后端需要，无法删除。建议将编辑页面单独一页或直接单独全屏一页，使用自己单独的静态文件，与其他页面区分。
+
+## 功能
+
+- 支持 Editor.md 大部分功能 
+    - 支持标准的Markdown 文本、 CommonMark 和 GFM (GitHub Flavored Markdown) 文本;
+    - 支持实时预览、图片上传、格式化代码、搜索替换、皮肤、多语言等。
+    - 支持TOC 目录和表情；
+    - 支持 TeX, 流程图、时序图等图表扩展。
+- 可自定义 Editor.md 工具栏。 
+- 提供了 `MDTextField` 字段用来支持模型字段使用。
+- 提供了 `MDTextFormField` 字段用来支持 `Form` 和 `ModelForm`.
+- 提供了 `MDEditorWidget` 字段用来支持 `admin` 自定义样式使用。
+
+
+## 快速入门
+
+- 安装
+```bash
+    pip install 
+```
+
+- 在 `settings` 配置文件 `INSTALLED_APPS` 中添加 `mdeditor`:
 ```python
     INSTALLED_APPS = [
         ...
@@ -50,21 +74,21 @@
     ]
 ```
 
-- add frame settings for django3.0+ like this：
+- 针对django3.0+修改 frame 配置，如下：
 
 ```python
-X_FRAME_OPTIONS = 'SAMEORIGIN' 
+X_FRAME_OPTIONS = 'SAMEORIGIN'  # django 3.0 + 默认为 deny
 ```
 
-- Add 'media' url to your settings like this:
+- 在 `settings` 中添加媒体文件的路径配置:
 ```python
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/media/'
 
 ```
-Make folder `uploads/editor` in you project for media files.  
+在你项目根目录下创建 `uploads/editor` 目录，用于存放上传的图片。  
 
-- Add url to your urls like this:
+- 在你项目的根 `urls.py` 中添加扩展url和媒体文件url:
 ```python
 from django.conf.urls import url, include
 from django.conf.urls.static import static
@@ -82,7 +106,7 @@ if settings.DEBUG:
 
 ```
 
-- Write your models like this:
+- 编写一个测试 model :
 ```python
 from django.db import models
 from mdeditor.fields import MDTextField
@@ -92,139 +116,145 @@ class ExampleModel(models.Model):
     content = MDTextField()
 ```
 
-- Register your model in `admin.py`
+- 向 `admin.py` 中注册model:
+```python
+from django.contrib import admin
+from . import models
 
-- Run `python manage.py makemigrations` and `python manage.py migrate` to create your models.
+admin.site.register(models.ExampleModel)
 
-- Login Admin ,you can see a markdown editor text field like this:
+```
 
-![](/screenshot/admin-example.png)
+- 运行 `python manage.py makemigrations` 和 `python manage.py migrate` 来创建你的model 数据库表.
 
+- 登录 django admin后台，点击 '添加'操作，你会看到如下界面。 
 
-## Usage
+![](/screenshot/20210403141949.png)
 
-### Edit fields in the model using Markdown
+到此，你已经初步体验了 `djang-mdeditor` ，接下来详细看下他的其他使用吧。
 
-Using Markdown to edit the fields in the model, we simply replace the `TextField` of the model with` MDTextField`.
+## 用法说明
+
+### 在model 中使用 Markdown 编辑字段
+
+在model 中使用 Markdown 编辑字段，我们只需要将 model 的`TextField` 替换成`MDTextField` 即可。
 
 ```python
 from django.db import models
 from mdeditor.fields import MDTextField
 
-class ExampleModel (models.Model):
-    name = models.CharField (max_length = 10)
-    content = MDTextField ()
+class ExampleModel(models.Model):
+    name = models.CharField(max_length=10)
+    content = MDTextField()
 ```
 
-Admin in the background, will automatically display markdown edit rich text.
+在后台admin中，会自动显示 markdown 的编辑富文本。
 
-Used in front-end template, you can use like this:
+在前端 template 中使用时，可以这样用：
 ```python
-{% load staticfiles%}
-<! DOCTYPE html>
-<html lang = "en">
-    <head>
-        <meta http-equiv = "Content-Type" content = "text / html; charset = utf-8" />
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    </ head>
-    <body>
-        <form method = "post" action = "./">
-            {% csrf_token%}
-            {{form.media}}
-            {{form.as_p}}
-            <p> <input type = "submit" value = "post"> </ p>
-        </ form>
-    </ body>
-</ html>
+    </head>
+    <body>
+        <form method="post" action="./">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+            <p><input type="submit" value="post"></p>
+        </form>
+    </body>
+</html>
 
 ```
 
-### Edit fields in the Form using markdown
+### 在 Form 中使用 markdown 编辑字段
 
-Use markdown to edit fields in the Form, use `MDTextFormField` instead of` forms.CharField`, as follows:
+在 Form 中使用 markdown 编辑字段，使用 `MDTextFormField` 代替 `forms.CharField`, 如下：
 ```python
 from mdeditor.fields import MDTextFormField
 
-class MDEditorForm (forms.Form):
-    name = forms.CharField ()
-    content = MDTextFormField ()
+class MDEditorForm(forms.Form):
+    name = forms.CharField()
+    content = MDTextFormField()
 ```
 
-`ModelForm` can automatically convert the corresponding model field to the form field, which can be used normally:
+`ModelForm` 可自动将model 对应的字段转为 form字段， 可正常使用：
 ```python
-class MDEditorModleForm (forms.ModelForm):
+class MDEditorModleForm(forms.ModelForm):
 
-    class Meta:
-        model = ExampleModel
-        fields = '__all__'
-```
+    class Meta:
+        model = ExampleModel
+        fields = '__all__'
+``` 
 
-### Use the markdown widget in admin
+### 在 admin 中使用 markdown 小组件
 
-Use the markdown widget in admin like as :
+在 admin 中使用 markdown 小组件，如下：
 ```python
 from django.contrib import admin
 from django.db import models
 
 # Register your models here.
-from. import models as demo_models
+from . import models as demo_models
 from mdeditor.widgets import MDEditorWidget
 
 
-class ExampleModelAdmin (admin.ModelAdmin):
-    formfield_overrides = {
-        models.TextField: {'widget': MDEditorWidget}
-    }
+class ExampleModelAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.TextField: {'widget': MDEditorWidget}
+    }
 
 
-admin.site.register (demo_models.ExampleModel, ExampleModelAdmin)
+admin.site.register(demo_models.ExampleModel, ExampleModelAdmin)
 ```
-### Customize the toolbar
 
-Add the following configuration to `settings`:
+### 自定义工具栏
+
+在 `settings` 中增加如下配置 ：
 ```python
 MDEDITOR_CONFIGS = {
-    'default':{
-        'width': '90% ',  # Custom edit box width
-        'heigth': 500,  # Custom edit box height
-        'toolbar': ["undo", "redo", "|",
-                    "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
-                    "h1", "h2", "h3", "h5", "h6", "|",
-                    "list-ul", "list-ol", "hr", "|",
-                    "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime",
-                    "emoji", "html-entities", "pagebreak", "goto-line", "|",
-                    "help", "info",
-                    "||", "preview", "watch", "fullscreen"],  # custom edit box toolbar 
-        'upload_image_formats': ["jpg", "jpeg", "gif", "png", "bmp", "webp"],  # image upload format type
-        'image_folder': 'editor',  # image save the folder name
-        'theme': 'default',  # edit box theme, dark / default
-        'preview_theme': 'default',  # Preview area theme, dark / default
-        'editor_theme': 'default',  # edit area theme, pastel-on-dark / default
-        'toolbar_autofixed': True,  # Whether the toolbar capitals
-        'search_replace': True,  # Whether to open the search for replacement
-        'emoji': True,  # whether to open the expression function
-        'tex': True,  # whether to open the tex chart function
-        'flow_chart': True,  # whether to open the flow chart function
-        'sequence': True, # Whether to open the sequence diagram function
-        'watch': True,  # Live preview
-        'lineWrapping': False,  # lineWrapping
-        'lineNumbers': False,  # lineNumbers
-        'language': 'zh'  # zh / en / es 
+'default':{
+    'width': '90%',  # 自定义编辑框宽度
+    'heigth': 500,   # 自定义编辑框高度
+    'toolbar': ["undo", "redo", "|",
+                "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
+                "h1", "h2", "h3", "h5", "h6", "|",
+                "list-ul", "list-ol", "hr", "|",
+                "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime",
+                "emoji", "html-entities", "pagebreak", "goto-line", "|",
+                "help", "info",
+                "||", "preview", "watch", "fullscreen"],  # 自定义编辑框工具栏
+    'upload_image_formats': ["jpg", "jpeg", "gif", "png", "bmp", "webp"],  # 图片上传格式类型
+    'image_folder': 'editor',  # 图片保存文件夹名称
+    'theme': 'default',  # 编辑框主题 ，dark / default
+    'preview_theme': 'default',  # 预览区域主题， dark / default
+    'editor_theme': 'default',  # edit区域主题，pastel-on-dark / default
+    'toolbar_autofixed': True,  # 工具栏是否吸顶
+    'search_replace': True,  # 是否开启查找替换
+    'emoji': True,  # 是否开启表情功能
+    'tex': True,  # 是否开启 tex 图表功能
+    'flow_chart': True,  # 是否开启流程图功能
+    'sequence': True,  # 是否开启序列图功能
+    'watch': True,  # 实时预览
+    'lineWrapping': False,  # 自动换行
+    'lineNumbers': False  # 行号
     }
-    
 }
 ```
 
-## Feedback 
+## 反馈交流
 
-Welcome to use and feedback!
+欢迎反馈和交流！
 
-You can create a [issue](https://github.com/pylixm/django-mdeditor/issues) or join in QQ Group. 
+你可以创建 [issue](https://github.com/pylixm/django-mdeditor/issues) 或加微信。
 
-![](screenshot/QQ.png)
+![](screenshot/个人微信号.png)
 
-## Reference
+## 参考
 
-- [django-ckeditor](https://github.com/django-ckeditor/django-ckeditor)
-
+-[django-ckeditor](https://github.com/django-ckeditor/django-ckeditor)
 

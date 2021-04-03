@@ -60,12 +60,21 @@ class UploadView(generic.View):
         file_full_name = '%s_%s.%s' % (file_name,
                                        '{0:%Y%m%d%H%M%S%f}'.format(datetime.datetime.now()),
                                        file_extension)
-        with open(os.path.join(file_path, file_full_name), 'wb+') as file:
-            for chunk in upload_image.chunks():
-                file.write(chunk)
+        if MDEDITOR_CONFIGS.get("OSS"):
+            # 使用阿里云存储
+            import oss2
+            auth = oss2.Auth(settings.OSS_ACCESS_KEY_ID, settings.OSS_ACCESS_KEY_SECRET)
+            bucket = oss2.Bucket(auth, settings.OSS_ENDPOINT, settings.OSS_BUCKET_NAME)
+            bucket.put_object(file_full_name, upload_image.read())
+            url = f"https://{settings.OSS_BUCKET_NAME}.{settings.OSS_ENDPOINT}/{file_full_name}"
+        else:
+            with open(os.path.join(file_path, file_full_name), 'wb+') as file:
+                for chunk in upload_image.chunks():
+                    file.write(chunk)
+            url = os.path.join(settings.MEDIA_URL,
+                               MDEDITOR_CONFIGS['image_folder'],
+                               file_full_name)
 
         return JsonResponse({'success': 1,
                              'message': "上传成功！",
-                             'url': os.path.join(settings.MEDIA_URL,
-                                                 MDEDITOR_CONFIGS['image_folder'],
-                                                 file_full_name)})
+                             'url': url})

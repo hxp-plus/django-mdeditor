@@ -1,5 +1,5 @@
 
-# django-mdeditor
+# django-mdeditor-pplus
 
 
 [![ENV](https://img.shields.io/badge/release-v0.1.19-blue.svg)](https://github.com/pylixm/django-mdeditor)
@@ -10,9 +10,36 @@
 [![LICENSE](https://img.shields.io/badge/license-GPL3.0-green.svg)](https://github.com/pylixm/django-mdeditor/master/LICENSE.txt)
 
 
-**Django-mdeditor** 是基于 [Editor.md](https://github.com/pandao/editor.md) 的一个 [django](djangoproject.com) Markdown 文本编辑插件应用。
+**Django-mdeditor-pplus** 是基于 [Editor.md](https://github.com/pandao/editor.md) 的一个 [django](djangoproject.com) Markdown 文本编辑插件应用。
 
-**Django-mdeditor** 的灵感参考自伟大的项目 [django-ckeditor](https://github.com/django-ckeditor/django-ckeditor).
+**Django-mdeditor-pplus** Fork 自 [django-mdeditor](https://github.com/pylixm/django-mdeditor)
+
+与django-mdeditor相比，主要增强了图片上传可自定义选择是存本地还是存第三方云平台。目前图片上传支持阿里云OSS
+
+与原项目相比，需要额外依赖第三方库 oss
+
+```
+pip install oss2
+```
+
+`settings.py` 必须加上阿里云OSS配置
+
+```
+# 阿里云存储
+OSS_ACCESS_KEY_ID = "xxx"
+OSS_ACCESS_KEY_SECRET = "xxx"
+OSS_ENDPOINT = "xxx"
+OSS_BUCKET_NAME = "xxx"
+# mdeditor 图片上传用oss
+MDEDITOR_CONFIGS = {"default": {"OSS": True, ...}}  # 开启阿里云oss开关
+```
+
+当然，你也可以在此基础上继续扩展实现其它云存储服务，例如七牛、又拍云、腾讯云等等。
+
+以下是原项目的readme
+
+------
+
 
 **注：** 
 
@@ -36,7 +63,7 @@
 
 - 安装
 ```bash
-    pip install django-mdeditor
+    pip install 
 ```
 
 - 在 `settings` 配置文件 `INSTALLED_APPS` 中添加 `mdeditor`:
@@ -102,7 +129,7 @@ admin.site.register(models.ExampleModel)
 
 - 登录 django admin后台，点击 '添加'操作，你会看到如下界面。 
 
-![](/screenshot/admin-example.png)
+![](/screenshot/20210403141949.png)
 
 到此，你已经初步体验了 `djang-mdeditor` ，接下来详细看下他的其他使用吧。
 
@@ -223,9 +250,9 @@ MDEDITOR_CONFIGS = {
 
 欢迎反馈和交流！
 
-你可以创建 [issue](https://github.com/pylixm/django-mdeditor/issues) 或加入QQ 群。
+你可以创建 [issue](https://github.com/pylixm/django-mdeditor/issues) 或加微信。
 
-![](screenshot/QQ.png)
+![](screenshot/个人微信号.png)
 
 ## 参考
 
